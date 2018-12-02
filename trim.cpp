@@ -10,41 +10,53 @@
  * Test functions for trim.h
  * ----------------------------------------------------------
  */
+ #include "trim.h"
+ #include <string.h>
 
-#include "trim.h"
+ void trim(char* source_string, char* trimmed_string)
+ {
+   char testChar[STRLEN];
+   remove_leading_blanks(source_string,testChar);
+   remove_trailing_blanks(testChar);
+   strcpy(trimmed_string,testChar);
+ }
 
-int trim(char* source, char* trimmed_string)
-{
-int end = -1;
-int start = -1;
-int count = strlen(source);
+ void remove_leading_blanks(char* source_string, char testChar[])
+ {
 
-  if(count > 0)
-  {
-    count--;
-    while((end == -1) && (count >= 0))
-    {
-      if(source[count] != ' ')
-      {
-        end = count;
-      }
-      count--;
-    }
+   bool textHasStarted=false;
+   int count=0;
+   for(int i=0;i<(int)strlen(source_string);i++)
+   {
+     if(textHasStarted==true)
+     {
+       testChar[count]=source_string[i];
+       count++;
+     }
 
-    count = 0;
-    while((start == -1) && (count < strlen(source)))
-    {
-      if(source[count] != ' ')
-      {
-        start = count;
-      }
-      count++;
-    }
-  }
+     if(source_string[i]!=' ' && textHasStarted==false)
+     {
+       testChar[0]=source_string[i];
+       textHasStarted=true;
+       count++;
+     }
 
-  count = 0;
-  for (int i = start; i <= end; i++) {
-    trimmed_string[i-start] = source[i];
-  }
-  return count;
-}
+   }
+   testChar[count]='\0';
+
+ }
+
+ void remove_trailing_blanks(char testChar[])
+ {
+   bool textHasStarted=false;
+
+   for(int i=(int)strlen(testChar)-1;i>0;i--)
+   {
+     if(testChar[i]!=' '&&textHasStarted==false)
+     {
+       testChar[i+1]='\0';
+       textHasStarted=true;
+     }
+   }
+
+ }
